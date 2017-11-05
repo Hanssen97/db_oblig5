@@ -55,3 +55,11 @@ class Skier {
     $this->birth = $birth;
   }
 }
+
+class Season {
+  public $year;
+
+  public function __construct($year) {
+    $this->year = $year;
+  }
+}
