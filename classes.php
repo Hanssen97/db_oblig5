@@ -5,10 +5,10 @@ class Club {
   public $name;
   public $city;
 
-  public function __construct($id = -1, $name, $city) {
-    $this->id = $id;
-    $this->name = $name;
-    $this->city = $city;
+  public function __construct($club) {
+    $this->id = $club->attributes()->id;
+    $this->name = $club->Name;
+    $this->city = $club->City;
   }
 }
 

@@ -1,23 +1,43 @@
 <?php
 
 include_once("classes.php");
-include_once("xPaths.php");
-
-$cities = []; $clubs = []; $logs = []; $skiers = [];
 
 // Connect to database
 $pdo = new PDO('mysql:host=127.0.0.1;dbname=db_oblig5;charset=utf8mb4', 'root', 'root');
 
-const $xml = simplexml_load_file('SkierLogs.xml');
+// Loading xml
+$xml = simplexml_load_file('SkierLogs.xml');
 
-$xml_cities = $XML->xpath(
-  '//SkierLogs/Clubs/Club'
-);
-
-
-foreach($CITIES as $city) {
-  array_push($cities, new City($city));
-}
+// Parsing xml
+$cities = parseCities($xml);
+$clubs = parseClubs($xml);
 
 echo '<pre>';
-print_r($cities);
+print_r($clubs);
+
+
+function parseCities($xml) {
+  $data = $xml->xpath(
+    '//SkierLogs/Clubs/Club'
+  );
+
+  $temp = [];
+  foreach($data as $city) {
+    array_push($temp, new City($city));
+  }
+
+  return $temp;
+}
+
+function parseClubs($xml) {
+  $data = $xml->xpath(
+    '//SkierLogs/Clubs/Club'
+  );
+
+  $temp = [];
+  foreach($data as $club) {
+    array_push($temp, new Club($club));
+  }
+
+  return $temp;
+}
