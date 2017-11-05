@@ -3,7 +3,7 @@
 include_once("classes.php");
 
 // Connect to database
-$pdo = new PDO('mysql:host=127.0.0.1;dbname=db_oblig5;charset=utf8mb4', 'root', 'root');
+$db = new PDO('mysql:host=127.0.0.1;dbname=db_oblig5;charset=utf8mb4', 'root', 'root');
 
 // Loading xml
 $xml = simplexml_load_file('SkierLogs.xml');
