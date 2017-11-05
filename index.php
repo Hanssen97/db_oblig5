@@ -11,11 +11,13 @@ $xml = simplexml_load_file('SkierLogs.xml');
 // Parsing xml
 $cities = parseCities($xml);
 $clubs = parseClubs($xml);
+$seasons = parseSeasons($xml);
 
 echo '<pre>';
-print_r($clubs);
+print_r($seasons);
 
 
+//------------------------------------------------------------------------------
 function parseCities($xml) {
   $data = $xml->xpath(
     '//SkierLogs/Clubs/Club'
@@ -29,6 +31,7 @@ function parseCities($xml) {
   return $temp;
 }
 
+//------------------------------------------------------------------------------
 function parseClubs($xml) {
   $data = $xml->xpath(
     '//SkierLogs/Clubs/Club'
@@ -37,6 +40,20 @@ function parseClubs($xml) {
   $temp = [];
   foreach($data as $club) {
     array_push($temp, new Club($club));
+  }
+
+  return $temp;
+}
+
+//------------------------------------------------------------------------------
+function parseSeasons($xml) {
+  $data = $xml->xpath(
+    '//SkierLogs/Season'
+  );
+
+  $temp = [];
+  foreach($data as $season) {
+    array_push($temp, new Season($season));
   }
 
   return $temp;

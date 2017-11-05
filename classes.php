@@ -59,7 +59,7 @@ class Skier {
 class Season {
   public $year;
 
-  public function __construct($year) {
-    $this->year = $year;
+  public function __construct($season) {
+    $this->year = $season->attributes()->fallYear;
   }
 }
