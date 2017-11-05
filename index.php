@@ -9,52 +9,74 @@ $pdo = new PDO('mysql:host=127.0.0.1;dbname=db_oblig5;charset=utf8mb4', 'root', 
 $xml = simplexml_load_file('SkierLogs.xml');
 
 // Parsing xml
-$cities = parseCities($xml);
-$clubs = parseClubs($xml);
-$seasons = parseSeasons($xml);
-
-echo '<pre>';
-print_r($seasons);
+//parseCities($xml);
+//parseClubs($xml);
+//parseSeasons($xml);
+//parseSkiers($xml);
+//parseLogs($xml);
 
 
 //------------------------------------------------------------------------------
 function parseCities($xml) {
-  $data = $xml->xpath(
-    '//SkierLogs/Clubs/Club'
-  );
+  $parser = new City();
+  $data = $xml->xpath('//SkierLogs/Clubs/Club');
 
-  $temp = [];
   foreach($data as $city) {
-    array_push($temp, new City($city));
+    $parser->parse($city);
   }
-
-  return $temp;
 }
 
 //------------------------------------------------------------------------------
 function parseClubs($xml) {
-  $data = $xml->xpath(
-    '//SkierLogs/Clubs/Club'
-  );
+  $parser = new Club();
+  $data = $xml->xpath('//SkierLogs/Clubs/Club');
 
-  $temp = [];
   foreach($data as $club) {
-    array_push($temp, new Club($club));
+    $parser->parse($club);
   }
-
-  return $temp;
 }
 
 //------------------------------------------------------------------------------
 function parseSeasons($xml) {
-  $data = $xml->xpath(
-    '//SkierLogs/Season'
-  );
+  $parser = new Season();
+  $data = $xml->xpath('//SkierLogs/Season');
 
-  $temp = [];
   foreach($data as $season) {
-    array_push($temp, new Season($season));
+    $parser->parse($season);
   }
+}
 
-  return $temp;
+//------------------------------------------------------------------------------
+function parseSkiers($xml) {
+  $parser = new Skier();
+  $data = $xml->xpath('//SkierLogs/Skiers/Skier');
+
+  foreach($data as $skier) {
+    $parser->parse($skier);
+  }
+}
+
+//------------------------------------------------------------------------------
+function parseLogs($xml) {
+  $parser = new Log();
+  $data = $xml->xpath('//SkierLogs/Season');
+
+  foreach($data as $Season) {
+    $season = $Season->attributes()->fallYear;
+    foreach($Season as $Skiers) {
+      $club = $Skiers->attributes()->clubId;
+      foreach($Skiers as $Skier) {
+        $skier = $Skier->attributes()->userName;
+        foreach($Skier as $Log) {
+          foreach($Log as $Entry) {
+            $date = $Entry->Date;
+            $area = $Entry->Area;
+            $distance = $Entry->Distance;
+
+            $parser->parse($season, $club, $skier, $date, $area, $distance);
+          }
+        }
+      }
+    }
+  }
 }

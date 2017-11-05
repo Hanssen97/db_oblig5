@@ -5,10 +5,17 @@ class Club {
   public $name;
   public $city;
 
-  public function __construct($club) {
+  public function parse($club) {
     $this->id = $club->attributes()->id;
     $this->name = $club->Name;
     $this->city = $club->City;
+
+    $this->save();
+  }
+
+  private function save() {
+    echo '<pre>';
+    print_r($this);
   }
 }
 
@@ -16,14 +23,20 @@ class City {
   public $cityname;
   public $county;
 
-  public function __construct($city) {
+  public function parse($city) {
     $this->cityname = $city->City;
     $this->county   = $city->County;
+
+    $this->save();
+  }
+
+  private function save() {
+    echo '<pre>';
+    print_r($this);
   }
 }
 
 class Log {
-  public $id;
   public $season;
   public $club;
   public $skier;
@@ -31,14 +44,20 @@ class Log {
   public $area;
   public $distance;
 
-  public function __construct($id, $season, $club, $skier, $date, $area, $distance) {
-    $this->id = $id;
+  public function parse($season, $club, $skier, $date, $area, $distance) {
     $this->season = $season;
     $this->club = $club;
     $this->skier = $skier;
     $this->date = $date;
     $this->area = $area;
     $this->distance = $distance;
+
+    $this->save();
+  }
+
+  private function save() {
+    echo '<pre>';
+    print_r($this);
   }
 }
 
@@ -48,18 +67,32 @@ class Skier {
   public $lastname;
   public $birth;
 
-  public function __construct($username, $firstname, $lastname, $birth) {
-    $this->username = $username;
-    $this->firstname = $firstname;
-    $this->lastname = $lastname;
-    $this->birth = $birth;
+  public function parse($skier) {
+    $this->username = $skier->attributes()->userName;
+    $this->firstname = $skier->FirstName;
+    $this->lastname = $skier->LastName;
+    $this->birth = $skier->YearOfBirth;
+
+    $this->save();
+  }
+
+  private function save() {
+    echo '<pre>';
+    print_r($this);
   }
 }
 
 class Season {
   public $year;
 
-  public function __construct($season) {
+  public function parse($season) {
     $this->year = $season->attributes()->fallYear;
+
+    $this->save();
+  }
+
+  private function save() {
+    echo '<pre>';
+    print_r($this);
   }
 }
