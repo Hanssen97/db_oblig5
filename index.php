@@ -2,18 +2,16 @@
 
 include_once("classes.php");
 
-// Connect to database
-$db = new PDO('mysql:host=127.0.0.1;dbname=db_oblig5;charset=utf8mb4', 'root', 'root');
-
 // Loading xml
 $xml = simplexml_load_file('SkierLogs.xml');
 
 // Parsing xml
-//parseCities($xml);
-//parseClubs($xml);
-//parseSeasons($xml);
-//parseSkiers($xml);
-//parseLogs($xml);
+parseCities($xml);
+parseClubs($xml);
+parseSeasons($xml);
+parseSkiers($xml);
+parseLogs($xml);
+parseTotalDistance($xml);
 
 
 //------------------------------------------------------------------------------
@@ -76,6 +74,28 @@ function parseLogs($xml) {
             $parser->parse($season, $club, $skier, $date, $area, $distance);
           }
         }
+      }
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
+function parseTotalDistance($xml) {
+  $parser = new TotalDistance();
+  $data = $xml->xpath('//SkierLogs/Season');
+
+  foreach($data as $Season) {
+    $season = $Season->attributes()->fallYear;
+    foreach($Season as $Skiers) {
+      foreach($Skiers as $Skier) {
+        $skier = $Skier->attributes()->userName;
+        $totalDistance = 0;
+        foreach($Skier as $Log) {
+          foreach($Log as $Entry) {
+            $totalDistance += $Entry->Distance;
+          }
+        }
+        $parser->parse($skier, $season, $totalDistance);
       }
     }
   }

@@ -2,6 +2,7 @@
 
 include_once("dbHandler.php");
 
+//------------------------------------------------------------------------------
 class Club {
   public $id;
   public $name;
@@ -16,11 +17,19 @@ class Club {
   }
 
   private function save() {
-    echo '<pre>';
-    print_r($this);
+    $db = Database::instance();
+
+    $stmt = $db->prepare(
+      'INSERT INTO Clubs (id, name, city) VALUES (:id, :name, :city)'
+    ); $stmt->execute([
+      ':id' => $this->id,
+      ':name' => $this->name,
+      ':city' => $this->city
+    ]);
   }
 }
 
+//------------------------------------------------------------------------------
 class City {
   public $cityname;
   public $county;
@@ -33,11 +42,18 @@ class City {
   }
 
   private function save() {
-    echo '<pre>';
-    print_r($this);
+    $db = Database::instance();
+
+    $stmt = $db->prepare(
+      'INSERT INTO Cities (cityname, county) VALUES (:cityname, :county)'
+    ); $stmt->execute([
+      ':cityname' => $this->cityname,
+      ':county' => $this->county,
+    ]);
   }
 }
 
+//------------------------------------------------------------------------------
 class Log {
   public $season;
   public $club;
@@ -58,11 +74,22 @@ class Log {
   }
 
   private function save() {
-    echo '<pre>';
-    print_r($this);
+    $db = Database::instance();
+
+    $stmt = $db->prepare(
+      'INSERT INTO Logs (season, club, skier, date, area, distance) VALUES (:season, :club, :skier, :date, :area, :distance)'
+    ); $stmt->execute([
+      ':season' => $this->season,
+      ':club' => $this->club,
+      ':skier' => $this->skier,
+      ':date' => $this->date,
+      ':area' => $this->area,
+      ':distance' => $this->distance
+    ]);
   }
 }
 
+//------------------------------------------------------------------------------
 class Skier {
   public $username;
   public $firstname;
@@ -79,11 +106,20 @@ class Skier {
   }
 
   private function save() {
-    echo '<pre>';
-    print_r($this);
+    $db = Database::instance();
+
+    $stmt = $db->prepare(
+      'INSERT INTO Skiers (username, firstname, lastname, birth) VALUES (:username, :firstname, :lastname, :birth)'
+    ); $stmt->execute([
+      ':username' => $this->username,
+      ':firstname' => $this->firstname,
+      ':lastname' => $this->lastname,
+      ':birth' => $this->birth
+    ]);
   }
 }
 
+//------------------------------------------------------------------------------
 class Season {
   public $year;
 
@@ -94,7 +130,39 @@ class Season {
   }
 
   private function save() {
-    echo '<pre>';
-    print_r($this);
+    $db = Database::instance();
+
+    $stmt = $db->prepare(
+      'INSERT INTO Seasons (year) VALUES (?)'
+    ); $stmt->execute([
+      $this->year
+    ]);
+  }
+}
+
+//------------------------------------------------------------------------------
+class TotalDistance {
+  public $skiername;
+  public $season;
+  public $distance;
+
+  public function parse($skiername, $season, $distance) {
+    $this->skiername = $skiername;
+    $this->season = $season;
+    $this->distance = $distance;
+
+    $this->save();
+  }
+
+  private function save() {
+    $db = Database::instance();
+
+    $stmt = $db->prepare(
+      'INSERT INTO TotalDistances (skiername, season, distance) VALUES (:skiername, :season, :distance)'
+    ); $stmt->execute([
+      ':skiername' => $this->skiername,
+      ':season' => $this->season,
+      ':distance' => $this->distance
+    ]);
   }
 }
